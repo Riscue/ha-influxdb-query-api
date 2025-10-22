@@ -1,0 +1,2 @@
+influxdb-client>=1.35.0
+homeassistant==2025.4.4

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+HASS_URL="http://localhost:8123"
+TOKEN="TOKEN"
+
+ENTITY_ID="sensor.entity_id"
+START="-1h"
+END="now()"
+RESOLUTION="15s"
+
+curl -s -X GET \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  "$HASS_URL/api/influxdb_query_api/query/$ENTITY_ID?start=$START&end=$END&res=$RESOLUTION" | jq

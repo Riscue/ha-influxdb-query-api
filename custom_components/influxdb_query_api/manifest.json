@@ -1,0 +1,14 @@
+{
+  "domain": "influxdb_query_api",
+  "name": "InfluxDB Query Api",
+  "codeowners": [
+    "@Riscue"
+  ],
+  "dependencies": [],
+  "documentation": "https://github.com/Riscue/ha-influxdb-query-api",
+  "issue_tracker": "https://github.com/Riscue/ha-influxdb-query-api/issues",
+  "requirements": [
+    "influxdb-client>=1.35.0"
+  ],
+  "version": "0.0.1"
+}
