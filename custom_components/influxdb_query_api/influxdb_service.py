@@ -2,22 +2,23 @@ import asyncio
 
 from influxdb_client import InfluxDBClient
 
-INFLUX_URL = "http://localhost:8086"
-INFLUX_TOKEN = "TOKEN"
-INFLUX_ORG = "org"
-INFLUX_BUCKET = "bucket"
+BUCKET = "bucket"
+HOST = "host"
+PORT = "port"
+TOKEN = "token"
+ORGANIZATION = "organization"
 
 
-async def run_flux_query(entity_id, range_start, range_stop):
+async def run_flux_query(conf, entity_id, range_start, range_stop):
     domain, entity = entity_id.split('.', 1)
     query = f'''
-    from(bucket: "{INFLUX_BUCKET}")
+    from(bucket: "{conf[BUCKET]}")
         |> range(start: {range_start}, stop: {range_stop})
         |> filter(fn: (r) => r.domain == "{domain}" and r.entity_id == "{entity}" and r._field == "value")
     '''
 
     def sync_query():
-        with InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=INFLUX_ORG) as client:
+        with InfluxDBClient(url=f"{conf[HOST]}:{conf[PORT]}", token=conf[TOKEN], org=conf[ORGANIZATION]) as client:
             tables = client.query_api().query(query)
             result = []
             for table in tables:
