@@ -1,5 +1,6 @@
 # Home Assistant InfluxDB Query API
 
+[![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)](https://home-assistant.io)
 [![hacs](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/default)
 [![License](https://img.shields.io/github/license/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](LICENSE.md)
 
