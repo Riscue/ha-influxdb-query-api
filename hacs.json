@@ -1,4 +1,6 @@
 {
   "name": "InfluxDB Query Api",
-  "render_readme": true
+  "zip_release": true,
+  "render_readme": true,
+  "filename": "influxdb_query_api.zip"
 }

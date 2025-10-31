@@ -1,0 +1,5 @@
+[run]
+branch = True
+source = custom_components/influxdb_query_api/
+omit =
+    custom_components/influxdb_query_api/__init__.py
