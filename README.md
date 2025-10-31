@@ -1,8 +1,13 @@
 # Home Assistant InfluxDB Query API
 
-[![hacs](https://img.shields.io/badge/hacs-default-orange.svg)](https://github.com/hacs/integration)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/Riscue/ha-influxdb-query-api.svg)](https://github.com/Riscue/ha-influxdb-query-api/releases)
+[![hacs](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/default)
+[![License](https://img.shields.io/github/license/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](LICENSE.md)
+
+[![GitHub Release](https://img.shields.io/github/release/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/releases)
+[![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/Riscue/ha-influxdb-query-api/latest/total?label=downloads&style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/releases)
+[![GitHub Activity](https://img.shields.io/github/commit-activity/y/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/commits/master)
+
+![Icon](assets/logo.png)
 
 This Home Assistant custom integration that provides a **secure backend API endpoint** for querying **InfluxDB v2**
 using **Flux** queries from within Home Assistant.
@@ -251,6 +256,4 @@ logger:
 
 ## License
 
-MIT © [Riscue][riscue]
-
-[riscue]: https://github.com/riscue
+MIT © [Riscue](https://github.com/riscue)
