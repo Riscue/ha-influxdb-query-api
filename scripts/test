@@ -3,13 +3,13 @@
 set -e
 
 HASS_URL="http://localhost:8123"
-TOKEN="TOKEN"
+ACCESS_TOKEN="ACCESS_TOKEN"
 
 ENTITY_ID="sensor.entity_id"
 START="-1h"
 END="now()"
 
 curl -s -X GET \
-  -H "Authorization: Bearer $TOKEN" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
-  "$HASS_URL/api/influxdb_query_api/query/$ENTITY_ID?start=$START&end=$END" | jq
+  "${HASS_URL}/api/influxdb_query_api/query/${ENTITY_ID}?start=${START}&end=${END}" | jq
