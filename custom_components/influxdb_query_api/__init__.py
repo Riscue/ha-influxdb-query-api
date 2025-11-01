@@ -1,3 +1,4 @@
+import homeassistant.helpers.config_validation as cv
 from homeassistant.components import http
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
@@ -6,6 +7,8 @@ from .influxdb_service import run_flux_query
 
 DOMAIN = "influxdb_query_api"
 INFLUXDB_CONF_DOMAIN = "influxdb"
+
+CONFIG_SCHEMA = cv.empty_config_schema(DOMAIN)
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType):
