@@ -1,7 +1,7 @@
 # Home Assistant InfluxDB Query API
 
 [![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)](https://home-assistant.io)
-[![hacs](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/default)
+[![hacs](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/default)
 [![License][license-shield]](LICENSE.md)
 
 [license-shield]: https://img.shields.io/github/license/Riscue/ha-influxdb-query-api.svg?style=for-the-badge
@@ -75,6 +75,12 @@ All data queries run **inside Home Assistant** in a secure, controlled manner.
 ## 📦 Installation
 
 ### HACS Installation (Recommended)
+
+This integration can be added to HACS as a [custom repository](https://hacs.xyz/docs/faq/custom_repositories):
+* URL: `https://github.com/Riscue/ha-influxdb-query-api`
+* Category: `Integration`
+
+After adding a custom repository you can use HACS to install this integration using user interface.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Riscue&repository=ha-influxdb-query-api)
 
