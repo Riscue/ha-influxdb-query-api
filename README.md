@@ -1,13 +1,15 @@
 # Home Assistant InfluxDB Query API
 
 [![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)](https://home-assistant.io)
-[![hacs](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/default)
+[![hacs](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/default)
 [![License][license-shield]](LICENSE.md)
 
 [license-shield]: https://img.shields.io/github/license/Riscue/ha-influxdb-query-api.svg?style=for-the-badge
 
-[![GitHub Release](https://img.shields.io/github/release/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/releases)
+[![Active installations](https://img.shields.io/badge/dynamic/json?style=for-the-badge&color=41BDF5&logo=home-assistant&label=active%20installations&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.influxdb_query_api.total)](https://github.com/Riscue/ha-wallpanel-media-player)
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/Riscue/ha-influxdb-query-api/latest/total?label=downloads&style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/releases)
+
+[![GitHub Release](https://img.shields.io/github/release/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/releases)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/y/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/commits/master)
 
 ![Icon](assets/logo.png)
