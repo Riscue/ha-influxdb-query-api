@@ -6,7 +6,7 @@
 
 [license-shield]: https://img.shields.io/github/license/Riscue/ha-influxdb-query-api.svg?style=for-the-badge
 
-[![Active installations](https://img.shields.io/badge/dynamic/json?style=for-the-badge&color=41BDF5&logo=home-assistant&label=active%20installations&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.influxdb_query_api.total)](https://github.com/Riscue/ha-wallpanel-media-player)
+[![Active installations](https://img.shields.io/badge/dynamic/json?style=for-the-badge&color=41BDF5&logo=home-assistant&label=active%20installations&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.influxdb_query_api.total)](https://github.com/Riscue/ha-influxdb-query-api)
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/Riscue/ha-influxdb-query-api/latest/total?label=downloads&style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/releases)
 
 [![GitHub Release](https://img.shields.io/github/release/Riscue/ha-influxdb-query-api.svg?style=for-the-badge)](https://github.com/Riscue/ha-influxdb-query-api/releases)
