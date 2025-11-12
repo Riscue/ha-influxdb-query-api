@@ -196,15 +196,16 @@ class SecurityValidator:
         for param in [range_start, range_stop]:
             param_lower = param.lower()
 
-            for pattern in cls.DANGEROUS_PATTERNS:
-                if re.search(pattern, param, re.IGNORECASE):
-                    raise ValueError(f"Potentially dangerous pattern detected in time range: {pattern}")
+            # Check for obvious injection attempts
+            dangerous_keywords = [
+                'import', 'from(', 'buckets(', 'drop(', 'delete(',
+                'org(', 'token(', 'exec(', 'eval(', 'system(',
+                'javascript:', 'data:', 'vbscript:', 'file:', 'ftp:', 'http:', 'https:'
+            ]
 
-            # Additional checks for suspicious content
-            suspicious_keywords = ['javascript:', 'data:', 'vbscript:', 'file:', 'ftp:', 'http:', 'https:']
-            for keyword in suspicious_keywords:
+            for keyword in dangerous_keywords:
                 if keyword in param_lower:
-                    raise ValueError(f"Suspicious content detected in time range: {keyword}")
+                    raise ValueError(f"Potentially dangerous pattern detected in time range: {keyword}")
 
         return range_start, range_stop
 
@@ -280,17 +281,18 @@ class SecurityValidator:
         """
         query_lower = query.lower()
 
-        # Check for dangerous patterns
-        for pattern in cls.DANGEROUS_PATTERNS:
-            if re.search(pattern, query, re.IGNORECASE):
-                return True
-
         # Check for suspicious keywords
         suspicious_keywords = [
+            'import ', 'buckets(', 'drop(', 'delete(',
+            'org(', 'token(', 'exec(', 'eval(', 'system(',
             'javascript:', 'data:', 'vbscript:', 'file:', 'ftp:',
             'drop table', 'delete from', 'insert into', 'update set',
-            'union select', 'exec(', 'eval(', 'system('
+            'union select', 'script>', '<script'
         ]
+
+        # Special case: from( is dangerous only when not part of from(bucket:...)
+        if 'from(' in query_lower and 'from(bucket:' not in query_lower:
+            suspicious_keywords.append('from(')
 
         for keyword in suspicious_keywords:
             if keyword in query_lower:
