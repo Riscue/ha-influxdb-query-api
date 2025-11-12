@@ -13,5 +13,5 @@
   "requirements": [
     "influxdb-client>=1.35.0"
   ],
-  "version": "0.0.3"
+  "version": "0.0.4-beta.1"
 }
