@@ -78,12 +78,6 @@ All data queries run **inside Home Assistant** in a secure, controlled manner.
 
 ### HACS Installation (Recommended)
 
-This integration can be added to HACS as a [custom repository](https://hacs.xyz/docs/faq/custom_repositories):
-* URL: `https://github.com/Riscue/ha-influxdb-query-api`
-* Category: `Integration`
-
-After adding a custom repository you can use HACS to install this integration using user interface.
-
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Riscue&repository=ha-influxdb-query-api)
 
 ### Manual Installation
