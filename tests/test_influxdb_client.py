@@ -142,13 +142,13 @@ class TestInfluxDBConnectionManager:
         new_client = Mock()
         new_client.ping.return_value = True
 
-        mock_client_class.side_effect = [old_client, new_client]
+        mock_client_class.return_value = new_client
 
-        # Initialize pool with failing client
-        manager._initialize_pool()
-        manager._connection_pool.get_nowait()  # Get the failing client
+        # Pool holds only the stale client
+        manager._initialized = True
+        manager._connection_pool.put(old_client)
 
-        # Get client should create new one
+        # Get client should replace it with a new one
         async with manager.get_client() as client:
             assert client == new_client
 
@@ -196,7 +196,7 @@ class TestInfluxDBConnectionManager:
 
         mock_query_api = Mock()
         mock_query_api.query.side_effect = [
-            InfluxDBError("Connection timeout"),
+            InfluxDBError(message="Connection timeout"),
             [mock_table]
         ]
         mock_client.query_api.return_value = mock_query_api
@@ -215,7 +215,7 @@ class TestInfluxDBConnectionManager:
         mock_client_class.return_value = mock_client
 
         mock_query_api = Mock()
-        mock_query_api.query.side_effect = InfluxDBError("Persistent connection error")
+        mock_query_api.query.side_effect = InfluxDBError(message="Persistent connection error")
         mock_client.query_api.return_value = mock_query_api
 
         with pytest.raises(Exception, match="InfluxDB query failed after"):
@@ -227,11 +227,11 @@ class TestInfluxDBConnectionManager:
     def test_should_retry_connection_errors(self, manager):
         """Test retry logic for connection errors."""
         retryable_errors = [
-            InfluxDBError("connection timeout"),
-            InfluxDBError("network unreachable"),
-            InfluxDBError("temporary failure"),
-            InfluxDBError("502 Bad Gateway"),
-            InfluxDBError("503 Service Unavailable"),
+            InfluxDBError(message="connection timeout"),
+            InfluxDBError(message="network unreachable"),
+            InfluxDBError(message="temporary failure"),
+            InfluxDBError(message="502 Bad Gateway"),
+            InfluxDBError(message="503 Service Unavailable"),
         ]
 
         for error in retryable_errors:
@@ -240,9 +240,9 @@ class TestInfluxDBConnectionManager:
     def test_should_not_retry_other_errors(self, manager):
         """Test retry logic for non-retryable errors."""
         non_retryable_errors = [
-            InfluxDBError("invalid query syntax"),
-            InfluxDBError("authentication failed"),
-            InfluxDBError("bucket not found"),
+            InfluxDBError(message="invalid query syntax"),
+            InfluxDBError(message="authentication failed"),
+            InfluxDBError(message="bucket not found"),
         ]
 
         for error in non_retryable_errors:
@@ -267,7 +267,7 @@ class TestInfluxDBConnectionManager:
             mock_client = Mock()
             mock_client.ping.return_value = True
             mock_clients.append(mock_client)
-            mock_client_class.return_value = mock_client
+        mock_client_class.side_effect = mock_clients
 
         # Initialize pool
         manager._initialize_pool()

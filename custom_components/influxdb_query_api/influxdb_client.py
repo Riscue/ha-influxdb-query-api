@@ -130,9 +130,6 @@ class InfluxDBConnectionManager:
 
         except Exception as e:
             _LOGGER.error(f"Error in get_client context: {e}")
-            # Don't re-raise if connection is being cleaned up
-            if "connection" in str(e).lower():
-                return
             raise
         finally:
             if client:

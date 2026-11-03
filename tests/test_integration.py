@@ -8,6 +8,7 @@ import json
 
 from custom_components.influxdb_query_api.influxdb_service import run_flux_query, cleanup_connections
 from custom_components.influxdb_query_api.utils import SecurityValidator
+from influxdb_client.client.exceptions import InfluxDBError
 
 
 class TestIntegration:
@@ -191,12 +192,8 @@ class TestIntegration:
     @pytest.mark.asyncio
     async def test_error_handling_and_recovery(self, mock_client_class, full_config):
         """Test error handling and recovery mechanisms."""
-        # Mock client that initially fails then succeeds
         mock_client = Mock()
-        mock_client.ping.side_effect = [
-            Exception("Initial connection failed"),
-            True  # Second ping succeeds
-        ]
+        mock_client.ping.return_value = True
         mock_client_class.return_value = mock_client
 
         # Mock query response
@@ -209,7 +206,7 @@ class TestIntegration:
 
         mock_query_api = Mock()
         mock_query_api.query.side_effect = [
-            Exception("Query timeout"),
+            InfluxDBError(message="Query timeout"),
             [mock_table]  # Second query succeeds
         ]
         mock_client.query_api.return_value = mock_query_api

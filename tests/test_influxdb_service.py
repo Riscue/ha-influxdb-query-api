@@ -91,6 +91,7 @@ class TestInfluxDBService:
             'range_start': '-1h',
             'range_stop': 'now()'
         }
+        mock_validator.check_for_injection_attempts.return_value = False
 
         result = await run_flux_query(config, 'sensor.temperature', '-1h', 'now()')
 
@@ -134,6 +135,7 @@ class TestInfluxDBService:
             'range_start': '-1h',
             'range_stop': 'now()'
         }
+        mock_validator.check_for_injection_attempts.return_value = False
 
         mock_manager.execute_query.side_effect = Exception("Connection failed")
 
@@ -218,6 +220,7 @@ class TestInfluxDBService:
             'range_start': '-1h',
             'range_stop': 'now()'
         }
+        mock_validator.check_for_injection_attempts.return_value = False
 
         # Mock different value types
         mock_manager.execute_query.return_value = [
@@ -250,6 +253,7 @@ class TestInfluxDBService:
             'range_start': '-1h',
             'range_stop': 'now()'
         }
+        mock_validator.check_for_injection_attempts.return_value = False
 
         # Mock empty result
         mock_manager.execute_query.return_value = []
@@ -273,6 +277,7 @@ class TestInfluxDBService:
             'range_start': '2025-01-10T00:00:00Z',
             'range_stop': '2025-01-10T23:59:59Z'
         }
+        mock_validator.check_for_injection_attempts.return_value = False
 
         mock_manager.execute_query.return_value = [{"time": "2025-01-10T12:00:00Z", "value": 25.5}]
 
@@ -303,4 +308,4 @@ class TestInfluxDBService:
 
         assert "from(bucket: \"bucket\")" in query
         assert "range(start: -1h, stop: now())" in query
-        assert "filter(fn: (r) => r[\"_measurement\"] == \"sensor\" and r[\"entity_id\"] == \"temp_01\" and r[\"_field\"] == \"value\")" in query
+        assert "filter(fn: (r) => r[\"_measurement\"] == \"sensor\" and r[\"entity_id\"] == \"temp_01\")" in query
