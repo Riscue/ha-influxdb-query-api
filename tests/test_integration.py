@@ -68,7 +68,7 @@ class TestIntegration:
         call_args = mock_query_api.query.call_args[0][0]
         assert "from(bucket: \"homeassistant\")" in call_args
         assert "range(start: -1h, stop: now())" in call_args
-        assert "r[\"_measurement\"] == \"sensor\"" in call_args
+        assert "r[\"domain\"] == \"sensor\"" in call_args
         assert "r[\"entity_id\"] == \"living_room_temperature\"" in call_args
 
     @patch('custom_components.influxdb_query_api.influxdb_client.InfluxDBClient')

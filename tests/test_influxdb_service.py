@@ -166,14 +166,14 @@ class TestInfluxDBService:
 
         expected = '''from(bucket: "homeassistant")
     |> range(start: -1h, stop: now())
-    |> filter(fn: (r) => r["_measurement"] == "sensor" and r["entity_id"] == "temperature" and r["_field"] == "value")'''
+    |> filter(fn: (r) => r["domain"] == "sensor" and r["entity_id"] == "temperature" and r["_field"] == "value")'''
 
         assert query == expected
 
     @patch('custom_components.influxdb_query_api.influxdb_service.SecurityValidator')
     def test_build_safe_query_injection_detected(self, mock_validator):
         """Test safe query building detects injection."""
-        mock_validator.build_safe_filter.return_value = 'r["_measurement"] == "sensor"'
+        mock_validator.build_safe_filter.return_value = 'r["domain"] == "sensor"'
         mock_validator.check_for_injection_attempts.return_value = True
 
         with pytest.raises(ValueError, match="Potentially dangerous query detected"):
@@ -301,11 +301,11 @@ class TestInfluxDBService:
     @patch('custom_components.influxdb_query_api.influxdb_service.SecurityValidator')
     def test_build_safe_query_with_special_chars(self, mock_validator):
         """Test safe query building with special characters in identifiers."""
-        mock_validator.build_safe_filter.return_value = 'r["_measurement"] == "sensor" and r["entity_id"] == "temp_01"'
+        mock_validator.build_safe_filter.return_value = 'r["domain"] == "sensor" and r["entity_id"] == "temp_01"'
         mock_validator.check_for_injection_attempts.return_value = False
 
         query = _build_safe_query("bucket", "sensor", "temp_01", "-1h", "now()")
 
         assert "from(bucket: \"bucket\")" in query
         assert "range(start: -1h, stop: now())" in query
-        assert "filter(fn: (r) => r[\"_measurement\"] == \"sensor\" and r[\"entity_id\"] == \"temp_01\")" in query
+        assert "filter(fn: (r) => r[\"domain\"] == \"sensor\" and r[\"entity_id\"] == \"temp_01\")" in query

@@ -204,19 +204,19 @@ class TestSecurityValidator:
         """Test building of safe filter expressions."""
         filter_expr = SecurityValidator.build_safe_filter("sensor", "temperature")
 
-        expected = 'r["_measurement"] == "sensor" and r["entity_id"] == "temperature" and r["_field"] == "value"'
+        expected = 'r["domain"] == "sensor" and r["entity_id"] == "temperature" and r["_field"] == "value"'
         assert filter_expr == expected
 
         # Custom field
         filter_expr = SecurityValidator.build_safe_filter("sensor", "temperature", "state")
-        expected = 'r["_measurement"] == "sensor" and r["entity_id"] == "temperature" and r["_field"] == "state"'
+        expected = 'r["domain"] == "sensor" and r["entity_id"] == "temperature" and r["_field"] == "state"'
         assert filter_expr == expected
 
     def test_check_for_injection_attempts_safe_cases(self):
         """Test detection of injection attempts on safe queries."""
         safe_queries = [
             'from(bucket: "test") |> range(start: -1h)',
-            'r["_measurement"] == "sensor" and r["entity_id"] == "test"',
+            'r["domain"] == "sensor" and r["entity_id"] == "test"',
             'from(bucket: "homeassistant") |> filter(fn: (r) => r._value > 0)'
         ]
 

@@ -266,7 +266,7 @@ class SecurityValidator:
         """
         safe_field = cls.sanitize_identifier(field)
 
-        return f'r["_measurement"] == "{domain}" and r["entity_id"] == "{entity}" and r["_field"] == "{safe_field}"'
+        return f'r["domain"] == "{domain}" and r["entity_id"] == "{entity}" and r["_field"] == "{safe_field}"'
 
     @classmethod
     def check_for_injection_attempts(cls, query: str) -> bool:
