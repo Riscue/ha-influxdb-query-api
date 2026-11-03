@@ -96,36 +96,64 @@ class InfluxDBConnectionManager:
             self._initialized = True
             _LOGGER.info(f"Connection pool initialized with {self._connection_pool.qsize()} active connections")
 
+    def _acquire_client(self) -> InfluxDBClient:
+        """Get a validated client from the pool (blocking, run in executor)."""
+        self._initialize_pool()
+
+        # Try to get a client from pool (with timeout)
+        try:
+            client = self._connection_pool.get(timeout=5)
+        except Empty:
+            _LOGGER.warning("Connection pool exhausted, creating new client")
+            client = self._create_client()
+
+        # Test if connection is still valid
+        try:
+            client.ping()
+        except Exception as e:
+            _LOGGER.warning(f"Connection ping failed, creating new client: {e}")
+            client = self._create_client()
+
+        with self._lock:
+            self._active_connections.add(client)
+
+        return client
+
+    def _release_client(self, client: InfluxDBClient):
+        """Return a client to the pool or close it (blocking, run in executor)."""
+        with self._lock:
+            self._active_connections.discard(client)
+
+        # Try to return client to pool
+        try:
+            if not self._connection_pool.full():
+                self._connection_pool.put(client, timeout=1)
+            else:
+                # Pool is full, close this connection
+                client.close()
+                _LOGGER.debug("Connection closed (pool full)")
+        except Exception as e:
+            _LOGGER.warning(f"Failed to return client to pool: {e}")
+            try:
+                client.close()
+            except:
+                pass
+
     @asynccontextmanager
     async def get_client(self):
         """
         Get a client from the connection pool (async context manager).
 
+        The client is synchronous; callers must not call it directly from the
+        event loop (use asyncio.to_thread).
+
         Usage:
             async with manager.get_client() as client:
-                result = client.query_api().query(query)
+                result = await asyncio.to_thread(client.query_api().query, query)
         """
-        self._initialize_pool()
-
         client = None
         try:
-            # Try to get a client from pool (with timeout)
-            try:
-                client = self._connection_pool.get(timeout=5)
-            except Empty:
-                _LOGGER.warning("Connection pool exhausted, creating new client")
-                client = self._create_client()
-
-            # Test if connection is still valid
-            try:
-                client.ping()
-            except Exception as e:
-                _LOGGER.warning(f"Connection ping failed, creating new client: {e}")
-                client = self._create_client()
-
-            with self._lock:
-                self._active_connections.add(client)
-
+            client = await asyncio.to_thread(self._acquire_client)
             yield client
 
         except Exception as e:
@@ -133,23 +161,22 @@ class InfluxDBConnectionManager:
             raise
         finally:
             if client:
-                with self._lock:
-                    self._active_connections.discard(client)
+                await asyncio.to_thread(self._release_client, client)
 
-                # Try to return client to pool
-                try:
-                    if not self._connection_pool.full():
-                        self._connection_pool.put(client, timeout=1)
-                    else:
-                        # Pool is full, close this connection
-                        client.close()
-                        _LOGGER.debug("Connection closed (pool full)")
-                except Exception as e:
-                    _LOGGER.warning(f"Failed to return client to pool: {e}")
-                    try:
-                        client.close()
-                    except:
-                        pass
+    @staticmethod
+    def _run_query(client: InfluxDBClient, query: str) -> List[Dict[str, Any]]:
+        """Execute a query and convert records (blocking, run in executor)."""
+        tables = client.query_api().query(query)
+        result = []
+
+        for table in tables:
+            for record in table.records:
+                result.append({
+                    "time": record.get_time().isoformat(),
+                    "value": record.get_value()
+                })
+
+        return result
 
     async def execute_query(self, query: str, retry_count: int = 0) -> List[Dict[str, Any]]:
         """
@@ -171,15 +198,7 @@ class InfluxDBConnectionManager:
             try:
                 _LOGGER.debug(f"Executing query (attempt {retry_count + 1}): {query[:100]}...")
 
-                tables = client.query_api().query(query)
-                result = []
-
-                for table in tables:
-                    for record in table.records:
-                        result.append({
-                            "time": record.get_time().isoformat(),
-                            "value": record.get_value()
-                        })
+                result = await asyncio.to_thread(self._run_query, client, query)
 
                 _LOGGER.debug(f"Query successful: {len(result)} records returned")
                 return result
